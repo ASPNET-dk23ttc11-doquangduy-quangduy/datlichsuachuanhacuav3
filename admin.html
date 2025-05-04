@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trang quản trị</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        text-align: center;
+        padding: 40px;
+        background: #f4f4f4;
+      }
+      h1 {
+        font-size: 28px;
+        color: #333;
+      }
+      input {
+        padding: 10px;
+        margin: 10px;
+        width: 220px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      #loginBtn {
+        background-color: #f7931e;
+        color: white;
+        padding: 12px 24px;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        margin-top: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      #loginBtn:hover {
+        background-color: #e67e00;
+        transform: scale(1.05);
+      }
+      .admin-link {
+        display: none;
+        margin: 20px 0;
+      }
+      .admin-link a {
+        display: inline-block;
+        text-decoration: none;
+        padding: 12px 20px;
+        margin: 10px;
+        font-size: 16px;
+        border-radius: 8px;
+        color: white;
+        background: #3498db;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: background 0.3s, transform 0.2s;
+      }
+      .admin-link a:hover {
+        background: #2980b9;
+        transform: scale(1.05);
+      }
+      #message {
+        color: red;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+    </style>
+    <!-- PHẦN HEADER -->
+    <header
+      style="
+        background-color: #007bdb;
+        color: white;
+        text-align: center;
+        padding: 20px 10px;
+      "
+    >
+      <h2 style="margin: 0; font-weight: 800">DANH SÁCH CÁC CÔNG VIỆC</h2>
+      <button
+        onclick="window.location.href='index.html'"
+        style="
+          margin-top: 10px;
+          background: #005fa3;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-weight: bold;
+          transition: 0.3s;
+        "
+      >
+        Về trang chủ
+      </button>
+    </header>
+    <!-- MENU ĐIỀU HƯỚNG -->
+    <nav style="background-color: #003e7e; padding: 10px 0">
+      <ul
+        style="
+          display: flex;
+          justify-content: center;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          gap: 30px;
+        "
+      >
+        <li>
+          <a
+            href="/index.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-home"></i> Trang chủ</a
+          >
+        </li>
+        <li>
+          <a
+            href="/booking.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-calendar-alt"></i> Đặt lịch</a
+          >
+        </li>
+        <li>
+          <a
+            href="/khachhang.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-users"></i> Khách hàng</a
+          >
+        </li>
+        <li>
+          <a
+            href="/admin.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-tools"></i> Quản trị</a
+          >
+        </li>
+        <li>
+          <a
+            href="/lienhe.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-phone"></i> Liên hệ</a
+          >
+        </li>
+      </ul>
+    </nav>
+  </head>
+  <body>
+    <h1>👨‍💼 Xin chào quản trị viên!</h1>
+    <p>Vui lòng đăng nhập để vào hệ thống quản lý.</p>
+
+    <div id="loginForm">
+      <input type="text" id="username" placeholder="Tên đăng nhập" />
+      <input type="password" id="password" placeholder="Mật mã" /><br />
+      <button id="loginBtn">Đăng nhập</button>
+      <div id="message"></div>
+    </div>
+
+    <div class="admin-link" id="adminLinks">
+      <a href="/congviec.html">Đến trang quản lý đặt lịch</a>
+      <a href="/dskhachhang.html">Đến trang quản lý yêu cầu khách hàng</a>
+    </div>
+
+    <script>
+      const loginBtn = document.getElementById("loginBtn");
+      const username = document.getElementById("username");
+      const password = document.getElementById("password");
+      const message = document.getElementById("message");
+      const loginForm = document.getElementById("loginForm");
+      const adminLinks = document.getElementById("adminLinks");
+
+      loginBtn.addEventListener("click", function () {
+        const user = username.value.trim();
+        const pass = password.value.trim();
+
+        if (user === "admin" && pass === "admin123") {
+          message.textContent = "";
+          loginBtn.style.display = "none";
+          username.style.display = "none";
+          password.style.display = "none";
+          adminLinks.style.display = "block";
+        } else {
+          message.textContent =
+            "Bạn đã nhập sai thông tin của nhà quản trị trang web.";
+        }
+      });
+    </script>
+  </body>
+</html>

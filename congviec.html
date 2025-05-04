@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dữ liệu công việc</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- FONT AWESOME ICONS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      integrity="sha512-..."
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- PHẦN HEADER -->
+    <header
+      style="
+        background-color: #90cf88;
+        color: white;
+        text-align: center;
+        padding: 20px 10px;
+      "
+    >
+      <h2 style="margin: 0; font-weight: 800">
+        DANH SÁCH CÁC CÔNG VIỆC THEO LỊCH KHÁCH HÀNG ĐẶT
+      </h2>
+      <button
+        onclick="window.location.href='index.html'"
+        style="
+          margin-top: 10px;
+          background: #e09304;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-weight: bold;
+          transition: 0.3s;
+        "
+      >
+        Tận tâm - An toàn - Chu đáo - Hiệu Quả
+      </button>
+    </header>
+    <!-- MENU ĐIỀU HƯỚNG -->
+    <nav style="background-color: #003e7e; padding: 10px 0">
+      <ul
+        style="
+          display: flex;
+          justify-content: center;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          gap: 30px;
+        "
+      >
+        <li>
+          <a
+            href="index.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-home"></i> Trang chủ</a
+          >
+        </li>
+        <li>
+          <a
+            href="datlich.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-calendar-alt"></i> Đặt lịch</a
+          >
+        </li>
+        <li>
+          <a
+            href="khachhang.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-users"></i> Khách hàng</a
+          >
+        </li>
+        <li>
+          <a
+            href="admin.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-tools"></i> Quản trị</a
+          >
+        </li>
+        <li>
+          <a
+            href="lienhe.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-phone"></i> Liên hệ</a
+          >
+        </li>
+      </ul>
+    </nav>
+    <!-- Bootstrap & DataTables -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css"
+    />
+
+    <style>
+      body {
+        background-color: #f4f6f9;
+        font-family: "Segoe UI", sans-serif;
+        padding: 30px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #343a40;
+      }
+      .custom-btn {
+        margin: 10px 5px;
+      }
+      table.dataTable thead {
+        background-color: #6f42c1;
+        color: white;
+      }
+      select.form-select {
+        min-width: 140px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Dữ liệu công việc</h2>
+
+    <div class="d-flex justify-content-end mb-3">
+      <a
+        href="https://docs.google.com/spreadsheets/d/1v81SEPJpK9PH47njZImBiR0aznSgiCK85quCh4FWHm8/edit?usp=sharing"
+        target="_blank"
+        class="btn btn-outline-primary custom-btn"
+        >📄 Mở file gốc</a
+      >
+      <button id="saveStatusBtn" class="btn btn-success custom-btn">
+        💾 Cập nhật trạng thái
+      </button>
+    </div>
+
+    <div class="table-responsive">
+      <table
+        id="dataTable"
+        class="display table table-striped table-bordered"
+        style="width: 100%"
+      >
+        <thead>
+          <tr>
+            <th>Thời gian</th>
+            <th>Họ và tên</th>
+            <th>SĐT</th>
+            <th>Dịch vụ</th>
+            <th>Ngày</th>
+            <th>Giờ</th>
+            <th>Yêu cầu</th>
+            <th>Địa chỉ</th>
+            <th>Trạng thái</th>
+            <th>Chức năng</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script>
+      const SHEET_API_URL =
+        "https://script.google.com/macros/s/AKfycbzzGKybdxHzZ2Ue2-5j9AAQhVa85evB5L1evQJf5z0deUHdxHBU5QCjBVbhG9lJCzkS/exec";
+      let table;
+
+      fetch(SHEET_API_URL)
+        .then((res) => res.json())
+        .then((data) => {
+          const tbody = document.querySelector("#dataTable tbody");
+          data.forEach((row) => {
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+            <td>${row.timestamp || ""}</td>
+            <td>${row.name || ""}</td>
+            <td>${row.phone || ""}</td>
+            <td>${row.service || ""}</td>
+            <td>${row.date || ""}</td>
+            <td>${row.time || ""}</td>
+            <td>${row.request || ""}</td>
+            <td>${row.address || ""}</td>
+            <td>${row.status || ""}</td>
+            <td>
+              <select class="form-select" data-row-index="${row.rowIndex}">
+                <option value="Chưa xử lý" ${
+                  row.status === "Chưa xử lý" ? "selected" : ""
+                }>Chưa xử lý</option>
+                <option value="Đã xử lý" ${
+                  row.status === "Đã xử lý" ? "selected" : ""
+                }>✔️ Đã xử lý</option>
+                <option value="Đang xử lý" ${
+                  row.status === "Đang xử lý" ? "selected" : ""
+                }>⏳ Đang xử lý</option>
+                <option value="Hủy" ${
+                  row.status === "Hủy" ? "selected" : ""
+                }>❌ Hủy</option>
+              </select>
+            </td>
+          `;
+            tbody.appendChild(tr);
+          });
+
+          table = $("#dataTable").DataTable();
+        });
+
+      document.getElementById("saveStatusBtn").addEventListener("click", () => {
+        const updates = [];
+        document.querySelectorAll("select.form-select").forEach((select) => {
+          updates.push({
+            rowIndex: parseInt(select.dataset.rowIndex),
+            status: select.value,
+          });
+        });
+
+        fetch(SHEET_API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ updates: updates }),
+        })
+          .then((response) => response.text())
+          .then((msg) => {
+            alert("✅ " + msg);
+          })
+          .catch((error) => {
+            alert("❌ Lỗi khi lưu trạng thái: " + error.message);
+          });
+      });
+    </script>
+  </body>
+</html>

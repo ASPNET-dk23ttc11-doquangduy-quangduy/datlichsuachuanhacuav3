@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Danh sách Khách hàng</title>
+    <!-- FONT AWESOME ICONS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      integrity="sha512-..."
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- PHẦN HEADER -->
+    <header
+      style="
+        background-color: #007bdb;
+        color: white;
+        text-align: center;
+        padding: 20px 10px;
+      "
+    >
+      <h2 style="margin: 0; font-weight: 800">THÔNG TIN KHÁCH HÀNG</h2>
+      <button
+        onclick="window.location.href='index.html'"
+        style="
+          margin-top: 10px;
+          background: #005fa3;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-weight: bold;
+          transition: 0.3s;
+        "
+      >
+        Về trang chủ
+      </button>
+    </header>
+
+    <!-- MENU ĐIỀU HƯỚNG -->
+    <nav style="background-color: #003e7e; padding: 10px 0">
+      <ul
+        style="
+          display: flex;
+          justify-content: center;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          gap: 30px;
+        "
+      >
+        <li>
+          <a
+            href="index.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-home"></i> Trang chủ</a
+          >
+        </li>
+        <li>
+          <a
+            href="datlich.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-calendar-alt"></i> Đặt lịch</a
+          >
+        </li>
+        <li>
+          <a
+            href="khachhang.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-users"></i> Khách hàng</a
+          >
+        </li>
+        <li>
+          <a
+            href="admin.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-tools"></i> Quản trị</a
+          >
+        </li>
+        <li>
+          <a
+            href="lienhe.html"
+            style="color: white; text-decoration: none; font-weight: bold"
+            ><i class="fas fa-phone"></i> Liên hệ</a
+          >
+        </li>
+        <div class="d-flex justify-content-end mb-3">
+          <a
+            href="https://docs.google.com/spreadsheets/d/1ZYMBkL6ET4j1cr9o302EGGVoCfdNmmkLgVU7xOBZX2E/edit?usp=sharing"
+            target="_blank"
+            class="btn btn-outline-primary custom-btn"
+            >📄 Mở file gốc</a
+          >
+          <button id="saveStatusBtn" class="btn btn-success custom-btn">
+            💾 Cập nhật trạng thái
+            <a
+              href="https://docs.google.com/spreadsheets/d/1ZYMBkL6ET4j1cr9o302EGGVoCfdNmmkLgVU7xOBZX2E/edit?usp=sharing"
+            ></a>
+          </button>
+        </div>
+      </ul>
+    </nav>
+
+    <!-- Bootstrap & DataTables CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
+    />
+  </head>
+  <body class="bg-light">
+    <div class="container mt-5">
+      <h2 class="text-center mb-4">📋 Danh sách khách hàng đã đăng ký</h2>
+      <div class="table-responsive">
+        <table id="customerTable" class="table table-striped table-bordered">
+          <thead class="table-primary text-center">
+            <tr>
+              <th>Thời gian</th>
+              <th>Họ và tên</th>
+              <th>Số điện thoại</th>
+              <th>Nội dung yêu cầu</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Dữ liệu sẽ được thêm bằng JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Tabletop.js/1.5.1/tabletop.min.js"></script>
+
+    <script>
+      const sheetID = "1ZYMBkL6ET4j1cr9o302EGGVoCfdNmmkLgVU7xOBZX2E";
+      const gid = "899599596";
+      const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&gid=${gid}`;
+
+      fetch(sheetURL)
+        .then((res) => res.text())
+        .then((rep) => {
+          const jsonData = JSON.parse(rep.substr(47).slice(0, -2));
+          const rows = jsonData.table.rows;
+          let tableHTML = "";
+          rows.forEach((row) => {
+            const cells = row.c;
+            tableHTML += `
+                <tr>
+                  <td>${cells[0]?.v || ""}</td>
+                  <td>${cells[1]?.v || ""}</td>
+                  <td>${cells[2]?.v || ""}</td>
+                  <td>${cells[3]?.v || ""}</td>
+                  <td>${cells[4]?.v || ""}</td>
+                </tr>
+              `;
+          });
+          document.getElementById("tableBody").innerHTML = tableHTML;
+          new DataTable("#customerTable");
+        })
+        .catch((err) => {
+          console.error("Lỗi tải dữ liệu Google Sheets:", err);
+        });
+    </script>
+  </body>
+</html>
